@@ -1,5 +1,4 @@
-function [T_n] = translateMesh(T, v)
-%TRANSLATEMESH move mesh by vector
+% TRANSLATEMESH move mesh by vector
 %
 % INPUTS:
 % T: input triangulation
@@ -7,6 +6,8 @@ function [T_n] = translateMesh(T, v)
 %
 % OUTPUTS:
 % T_n: output triangulation
+
+function [T_n] = translateMesh(T, v)
 
     T_n = triangulation(T.ConnectivityList, T.Points + v);
     
