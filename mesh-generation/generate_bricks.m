@@ -1,116 +1,90 @@
-clear all
-close all
-clc
-
-GPHS_HEIGHT = 2.09;           % [in]
-
-if GPHS_HEIGHT == 2.09
-  STEP1 = true;
-  STEP2 = false;
-  GPHS_STACK_COUNT = 18;
-elseif GPHS_HEIGHT == 2.29
-  STEP1 = false;
-  STEP2 = true;
-  GPHS_STACK_COUNT = 16;
-end
-
-GENERATE_BRICKS = true;
-EXPORT_TOGGLE = false;
-GRAPH_TOGGLE = true;
-
-REFINE_SCALE = 20;
-
-% --------------- GENERATE BRICK FACES --------------- %
-
-if GENERATE_BRICKS
-
-  x_GPHS_bbox = [-GPHS_WIDTH/2, GPHS_WIDTH/2;...
-      GPHS_DEPTH/2, GPHS_DEPTH/2;...
-      0, GPHS_HEIGHT];
-
-  x_GPHS_dir = [0, 1, 0];
-
-  x_GPHS_mesh = rectGeneration(x_GPHS_bbox, x_GPHS_dir, REFINE_SCALE);
-
-  x_GPHS_points = x_GPHS_mesh.Points;
-  x_GPHS_pointers = x_GPHS_mesh.ConnectivityList;
-
-  y_GPHS_bbox = [GPHS_WIDTH/2, GPHS_WIDTH/2;...
-      -GPHS_DEPTH/2, GPHS_DEPTH/2;...
-      0, GPHS_HEIGHT];
-
-  y_GPHS_dir = [1, 0, 0];
-
-  y_GPHS_mesh = generate_rectangle(y_GPHS_bbox, y_GPHS_dir, REFINE_SCALE);
-
-  y_GPHS_points = y_GPHS_mesh.Points;
-  y_GPHS_pointers = y_GPHS_mesh.ConnectivityList;
-
-
-  GPHS_points = [x_GPHS_points; y_GPHS_points];
-  GPHS_pointers = [x_GPHS_pointers; y_GPHS_pointers + size(x_GPHS_points, 1)];
-
-  GPHS_mesh = triangulation(GPHS_pointers, GPHS_points);
-
-  % <-> DUPLICATE BRICKS VERTICALLY <-> %
-  
-  GPHS_meshes = cell(GPHS_STACK_COUNT,1);
-  GPHS_meshes{GPHS_STACK_COUNT/2} = GPHS_mesh;
-
-  for i = 1:GPHS_STACK_COUNT/2
-      GPHS_meshes{GPHS_STACK_COUNT/2+i} = translateMesh(GPHS_mesh, [0, 0, -i*GPHS_HEIGHT]);
-      if i == GPHS_STACK_COUNT/2
-          break;
-      end
-      GPHS_meshes{GPHS_STACK_COUNT/2-i} = translateMesh(GPHS_mesh, [0, 0, i*GPHS_HEIGHT]);
-  end
-  
-  % <-> PACKAGE DUPLICATES INTO ONE MESH <-> %
-
-  GPHS_points = zeros(1, 3);
-  GPHS_pointers = zeros(1, 3);
-
-  for i = 1 : GPHS_STACK_COUNT
-      prev_points_size = size(GPHS_points,1);
-      GPHS_points = [GPHS_points; GPHS_meshes{i}.Points];
-      GPHS_pointers = [GPHS_pointers; GPHS_meshes{i}.ConnectivityList + prev_points_size];
+function generate_bricks(STEP_TYPE, REFINE_SCALE, EXPORT_TOGGLE, GRAPH_TOGGLE)
+  arguments
+    STEP_TYPE string {mustBeText} = 'STEP1'
+    REFINE_SCALE int8 {mustBePositive, mustBeInteger} = 1
+    EXPORT_TOGGLE logical {mustBeNumericOrLogical} = false
+    GRAPH_TOGGLE logical {mustBeNumericOrLogical} = true
   end
 
-  GPHS_points(1,:) = [];
-  GPHS_pointers(1,:) = [];
-  GPHS_pointers = GPHS_pointers - 1;
-
-  GPHS_mesh = triangulation(GPHS_pointers, GPHS_points);
-
-end
-
-% <-> EXPORT MESHES <-> %
-
-if EXPORT_TOGGLE
-  if GENERATE_BRICKS && STEP1
-      if ~exist(['../meshes/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
-          mkdir(['../meshes/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
-      end
-      stlwrite(GPHS_mesh, ['../meshes/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step1-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
-  elseif GENERATE_BRICKS && STEP2
-      if ~exist(['../meshes/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
-          mkdir(['../meshes/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
-      end
-      stlwrite(GPHS_mesh, ['../meshes/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step2-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
+  %* --------------- BRICK PARAMETERS --------------- *%
+  GPHS_WIDTH_x = 3.92;            % [in]
+  GPHS_DEPTH_y = 3.668;           % [in]
+  %! ----- set brick type settings ----- !%
+  if strcmpi(STEP_TYPE, 'step1')
+    GPHS_HEIGHT_z = 2.09;         % [in]
+    GPHS_STACK_COUNT = 18;
+    STEP1 = true; STEP2 = false;
+  elseif strcmpi(STEP_TYPE, 'step2')
+    GPHS_HEIGHT_z = 2.29;         % [in]
+    GPHS_STACK_COUNT = 16;
+    STEP1 = false; STEP2 = true;
   end
-end
 
-% <-> PLOT MESHES <-> %
+  %* --------------- GENERATE BRICK FACES --------------- *%
+  %! generate GPHS brick faces parallel to the x-z plane centered at (0,0,0)
+  x_z_positive_y_face_vertices = [-GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,  -GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
+                                   GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,  -GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
+                                   GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
+                                  -GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2)];
+  x_z_positive_y_face_normal = [0, 1, 0];
+  x_z_positive_y_face_mesh = generate_rectangle(x_z_positive_y_face_vertices, x_z_positive_y_face_normal, REFINE_SCALE);
+  x_z_negative_y_face_mesh = flipNormals(translateMesh(x_z_positive_y_face_mesh,[0,-GPHS_DEPTH_y,0]));
 
-if GRAPH_TOGGLE
+  %! generate bricks faces parallel to the y-z plane centered at (0,0,0)
+  y_z_positive_x_face_vertices = [GPHS_WIDTH_x/2,  GPHS_DEPTH_y/2,  -GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
+                                  GPHS_WIDTH_x/2, -GPHS_DEPTH_y/2,  -GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
+                                  GPHS_WIDTH_x/2, -GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
+                                  GPHS_WIDTH_x/2,  GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2)];
+  y_z_positive_x_face_normal = [1, 0, 0];
+  y_z_positive_x_face_mesh = generate_rectangle(y_z_positive_x_face_vertices, y_z_positive_x_face_normal, REFINE_SCALE);
+  y_z_negative_x_face_mesh = flipNormals(translateMesh(y_z_positive_x_face_mesh,[-GPHS_WIDTH_x,0,0]));
 
-  figure
-  trisurf(GPHS_mesh,'EdgeColor','cyan','LineStyle',':','FaceColor','blue')
-  pbaspect([1,1,1])
-  daspect([1,1,1])
-  xlabel('x')
-  ylabel('y')
-  zlabel('z')
-  set(gca, 'xDir', 'reverse')
-  set(gca, 'YDir', 'reverse')
+  %* --------------- PACKAGE THE MESHES --------------- *%
+  GPHS_bricks_mesh_points = [x_z_positive_y_face_mesh.Points;...
+                             x_z_negative_y_face_mesh.Points;...
+                             y_z_positive_x_face_mesh.Points;...
+                             y_z_negative_x_face_mesh.Points];
+  GPHS_bricks_mesh_connectivity = [x_z_positive_y_face_mesh.ConnectivityList;...
+                                   x_z_negative_y_face_mesh.ConnectivityList + (size(x_z_positive_y_face_mesh.Points, 1));...
+                                   y_z_positive_x_face_mesh.ConnectivityList + (size(x_z_positive_y_face_mesh.Points, 1) +...
+                                                                                size(x_z_negative_y_face_mesh.Points, 1));...
+                                   y_z_negative_x_face_mesh.ConnectivityList + (size(x_z_positive_y_face_mesh.Points, 1) +...
+                                                                                size(x_z_negative_y_face_mesh.Points, 1) +...
+                                                                                size(y_z_positive_x_face_mesh.Points, 1))];
+
+  %* --------------- FILTER FOR UNIQUE POINTS --------------- *%
+  [GPHS_bricks_mesh_points, ~, IC] = unique(GPHS_bricks_mesh_points, 'rows', 'stable');
+  GPHS_bricks_mesh_connectivity = IC(GPHS_bricks_mesh_connectivity);
+
+  %* --------------- STORE THE TRIANGULATION --------------- *%
+  GPHS_bricks_mesh = triangulation(GPHS_bricks_mesh_connectivity, GPHS_bricks_mesh_points);
+
+  %? <-><-><-><-><-> EXPORT STL MESHES <-><-><-><-><-> ?%
+  if EXPORT_TOGGLE
+    if STEP1
+        if ~exist(['../assets/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
+            mkdir(['../assets/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
+        end
+        stlwrite(GPHS_mesh, ['../assets/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step1-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
+    elseif STEP2
+        if ~exist(['../assets/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
+            mkdir(['../assets/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
+        end
+        stlwrite(GPHS_mesh, ['../assets/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step2-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
+    end
+  end
+
+  %? <-><-><-><-><-> PLOT STL MESHES <-><-><-><-><-> ?%
+  if GRAPH_TOGGLE
+
+    figure
+    trisurf(GPHS_bricks_mesh,'EdgeColor','black','LineStyle','-','FaceColor','blue')
+    pbaspect([1,1,1])
+    daspect([1,1,1])
+    xlabel('x')
+    ylabel('y')
+    zlabel('z')
+
+  end
+
 end
