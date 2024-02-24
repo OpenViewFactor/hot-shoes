@@ -3,7 +3,6 @@
 % INPUTS:
 % v : array of 4 3-D vertices [v1; v2; v3; v4] in clockwise order such that the
 %            normal vector, as defined by right-hand rule, is oriented as intended
-% dir : intended normal vector direction for the rectangle
 % scale : scalar refinement factor for distmesh -> higher is more refined
 %
 % OUTPUTS:
@@ -13,11 +12,10 @@
 %       - further coordinate transformations can be applied for modifications like rotation
 %       - for simplicity, one edge is assumed to lie parallel to the z-axis
 
-function oM = generate_rectangle(v, dir, scale)
+function oM = generate_rectangle(v, scale)
 
   v1 = v(1,:); v2 = v(2,:); v3 = v(3,:); v4 = v(4,:);
   origin = v1;
-  normal_vector = cross(v1, v2);
 
   % project 3D coordinates into 2D plane
   [v1_2d, v2_2d, v3_2d, v4_2d, A] = replane(v1, v2, v3, v4);
@@ -40,10 +38,5 @@ function oM = generate_rectangle(v, dir, scale)
   oP3D = [oP2D, zeros(length(oP2D(:,1)),1)];
   oP3D = origin + transpose(A*transpose(oP3D));
   oM = triangulation(oC, oP3D);
-
-  % check normals -> flip
-  if ~vecEq(dir./norm(dir), normal_vector, 0.0001) && ~vecEq(dir./norm(dir), [0,0,0], 0.0001)
-    oM = flipNormals(oM);
-  end
 
 end

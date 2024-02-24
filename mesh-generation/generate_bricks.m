@@ -26,8 +26,8 @@ function generate_bricks(STEP_TYPE, REFINE_SCALE, EXPORT_TOGGLE, GRAPH_TOGGLE)
                                    GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,  -GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
                                    GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
                                   -GPHS_WIDTH_x/2, GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2)];
-  x_z_positive_y_face_normal = [0, 1, 0];
-  x_z_positive_y_face_mesh = generate_rectangle(x_z_positive_y_face_vertices, x_z_positive_y_face_normal, REFINE_SCALE);
+  x_z_positive_y_face_mesh = generate_rectangle(x_z_positive_y_face_vertices, REFINE_SCALE);
+  x_z_positive_y_face_mesh = flipNormals(x_z_positive_y_face_mesh);
   x_z_negative_y_face_mesh = flipNormals(translateMesh(x_z_positive_y_face_mesh,[0,-GPHS_DEPTH_y,0]));
 
   %! generate bricks faces parallel to the y-z plane centered at (0,0,0)
@@ -35,8 +35,8 @@ function generate_bricks(STEP_TYPE, REFINE_SCALE, EXPORT_TOGGLE, GRAPH_TOGGLE)
                                   GPHS_WIDTH_x/2, -GPHS_DEPTH_y/2,  -GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
                                   GPHS_WIDTH_x/2, -GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2);...
                                   GPHS_WIDTH_x/2,  GPHS_DEPTH_y/2,   GPHS_HEIGHT_z*(GPHS_STACK_COUNT/2)];
-  y_z_positive_x_face_normal = [1, 0, 0];
-  y_z_positive_x_face_mesh = generate_rectangle(y_z_positive_x_face_vertices, y_z_positive_x_face_normal, REFINE_SCALE);
+  y_z_positive_x_face_mesh = generate_rectangle(y_z_positive_x_face_vertices, REFINE_SCALE);
+  y_z_positive_x_face_mesh = flipNormals(y_z_positive_x_face_mesh);
   y_z_negative_x_face_mesh = flipNormals(translateMesh(y_z_positive_x_face_mesh,[-GPHS_WIDTH_x,0,0]));
 
   %* --------------- PACKAGE THE MESHES --------------- *%
