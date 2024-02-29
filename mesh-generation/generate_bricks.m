@@ -62,15 +62,15 @@ function generate_bricks(STEP_TYPE, REFINE_SCALE, EXPORT_TOGGLE, GRAPH_TOGGLE)
   %? <-><-><-><-><-> EXPORT STL MESHES <-><-><-><-><-> ?%
   if EXPORT_TOGGLE
     if STEP1
-        if ~exist(['../assets/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
-            mkdir(['../assets/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
+        if ~exist(['../assets/bricks/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
+            mkdir(['../assets/bricks/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
         end
-        stlwrite(GPHS_bricks_mesh, ['../assets/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step1-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
+        stlwrite(GPHS_bricks_mesh, ['../assets/bricks/step1-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step1-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
     elseif STEP2
-        if ~exist(['../assets/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
-            mkdir(['../assets/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
+        if ~exist(['../assets/bricks/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)], 'dir')
+            mkdir(['../assets/bricks/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE)])
         end
-        stlwrite(GPHS_bricks_mesh, ['../assets/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step2-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
+        stlwrite(GPHS_bricks_mesh, ['../assets/bricks/step2-GPHS-bricks-ref-',num2str(REFINE_SCALE),'/step2-GPHS-bricks-stack-ref-',num2str(REFINE_SCALE),'.stl'], "binary");
     end
   end
 
