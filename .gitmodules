@@ -1,0 +1,3 @@
+[submodule "sub/ovfpy_macro"]
+	path = sub/ovfpy_macro
+	url = https://github.com/OpenViewFactor/ovfpy-macro.git
