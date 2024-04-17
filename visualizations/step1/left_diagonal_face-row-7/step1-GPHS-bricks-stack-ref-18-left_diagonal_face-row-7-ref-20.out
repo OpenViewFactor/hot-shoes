@@ -1,0 +1,18 @@
+Openviewfactor version 1.0
+Solver method: DAIMT
+Solver backend: OMP
+Solver precision: DOUBLE
+Selfint mode: NONE
+Output file: NONE
+VTK file: c:\Development\OpenViewFactor\hot-shoes\visualizations\step1\left_diagonal_face-row-7\step1-GPHS-bricks-stack-ref-18-left_diagonal_face-row-7-ref-20.vtu
+Loading emitter mesh: c:\Development\OpenViewFactor\hot-shoes\assets\bricks\step1-GPHS-BRICKS-ref-18\step1-GPHS-bricks-stack-ref-18.stl
+Loading receiver mesh: c:\Development\OpenViewFactor\hot-shoes\assets\hot-shoes\ref-20\left_diagonal_face-row-7-ref-20.stl
+Meshes Loaded
+Computing view factors...
+View factors completed
+VF Average: 0.00100188
+Total Solve Time: 15 s
+Writing VTK file c:\Development\OpenViewFactor\hot-shoes\visualizations\step1\left_diagonal_face-row-7\step1-GPHS-bricks-stack-ref-18-left_diagonal_face-row-7-ref-20.vtu
+Complete!
+Total I/O Time: 152 s
+Total Solve Time: 15 s
