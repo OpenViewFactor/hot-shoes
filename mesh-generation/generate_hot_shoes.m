@@ -63,7 +63,7 @@ function generate_hot_shoes(REFINE_SCALE, EXPORT_TOGGLE, GRAPH_TOGGLE)
   %* --------------- PLOT MESHES --------------- *%
   if GRAPH_TOGGLE
     
-    figure
+    % figure
     hold on
     for i = 1 : SHOE_STACK_COUNT
       trisurf(SHOE_meshes{i, 1},'EdgeColor','black','LineStyle','-','FaceColor','red')

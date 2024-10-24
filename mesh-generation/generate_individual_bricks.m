@@ -80,7 +80,7 @@ function generate_individual_bricks(REFINE_SCALE, EXPORT_TOGGLE, GRAPH_TOGGLE, S
   %* --------------- PLOT MESHES --------------- *%
   if GRAPH_TOGGLE
     
-    figure
+    % figure
     hold on
     for i = 1 : GPHS_STACK_COUNT
       trisurf(BRICK_meshes{i, 1},'EdgeColor',[1,1,1].*mod(i,2),'LineStyle','-','FaceColor',[1,0,0].*i/GPHS_STACK_COUNT)
