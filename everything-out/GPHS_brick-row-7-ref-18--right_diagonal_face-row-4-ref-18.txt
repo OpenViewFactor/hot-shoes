@@ -1,0 +1,21 @@
+maximum vector size: 2305843009213693951
+Openviewfactor version 1.0
+Solver method: DAIMT
+Solver backend: OMP
+Solver precision: DOUBLE
+Selfint mode: NONE
+Output file: NONE
+VTK file: c:\Development\OpenViewFactor\hot-shoes\everything-out\GPHS_brick-row-7-ref-18--right_diagonal_face-row-4-ref-18.vtk
+Loading emitter mesh: c:\Development\OpenViewFactor\hot-shoes\assets\hot-shoes\ref-18\right_diagonal_face-row-4-ref-18.stl
+Loading receiver mesh: c:\Development\OpenViewFactor\hot-shoes\assets\bricks_individual\ref-18\GPHS_brick-row-7-ref-18.stl
+Meshes Loaded
+Computing view factors...
+view factor allocation size: 63111516
+view factor allocation size: 63111516
+View factors completed
+VF Average: 0.000218597178380384
+Total Solve Time: 2 s
+Writing VTK file c:\Development\OpenViewFactor\hot-shoes\everything-out\GPHS_brick-row-7-ref-18--right_diagonal_face-row-4-ref-18.vtk
+Complete!
+Total I/O Time: 20 s
+Total Solve Time: 2 s
