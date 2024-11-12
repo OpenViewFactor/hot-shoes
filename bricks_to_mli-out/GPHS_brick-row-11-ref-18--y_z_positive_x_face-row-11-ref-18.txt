@@ -5,12 +5,18 @@ Solver backend: CUDA
 Solver precision: DOUBLE
 Selfint mode: NONE
 Output file: NONE
-VTK file: c:\Development\OpenViewFactor\hot-shoes\bricks_to_mli-out\GPHS_brick-row-11-ref-18--y_z_positive_x_face-row-11-ref-18.vtk
-Loading emitter mesh: c:\Development\OpenViewFactor\hot-shoes\assets\bricks_individual\ref-18\GPHS_brick-row-11-ref-18.stl
-Loading receiver mesh: c:\Development\OpenViewFactor\hot-shoes\assets\mli\ref-18\y_z_positive_x_face-row-11-ref-18.stl
-Loading blocking mesh: c:\Development\OpenViewFactor\hot-shoes\assets\hot-shoes\ref-2\all_shoes-ref-2.stl
+VTK file: C:\Development\OpenViewFactor\hot-shoes\bricks_to_mli-out\GPHS_brick-row-11-ref-18--y_z_positive_x_face-row-11-ref-18.vtu
+Loading emitter mesh: C:\Development\OpenViewFactor\hot-shoes\assets\bricks_individual\ref-18\GPHS_brick-row-11-ref-18.stl
+Loading receiver mesh: C:\Development\OpenViewFactor\hot-shoes\assets\mli\ref-18\y_z_positive_x_face-row-11-ref-18.stl
+Loading blocking mesh: C:\Development\OpenViewFactor\hot-shoes\assets\hot-shoes\ref-2\all_shoes-ref-2.stl
 Meshes Loaded
 Computing view factors...
 view factor allocation size: 77152920
 view factor allocation size: 77152920
-CUDA ERROR, terminating...
+View factors completed
+VF Average: 3.06133245175875e-06
+Total Solve Time: 153 s
+Writing VTK file C:\Development\OpenViewFactor\hot-shoes\bricks_to_mli-out\GPHS_brick-row-11-ref-18--y_z_positive_x_face-row-11-ref-18.vtu
+Complete!
+Total I/O Time: 24 s
+Total Solve Time: 153 s
