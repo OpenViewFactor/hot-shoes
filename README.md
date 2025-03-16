@@ -1,2 +1,3 @@
 # hot-shoes
-house all code related to studying the hot shoes
+
+This repository houses all the mesh files and ovf output lots and visualizations for the GPHS bricks to the unicouple hot-shoes.
